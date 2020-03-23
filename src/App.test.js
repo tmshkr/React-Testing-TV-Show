@@ -8,34 +8,44 @@ import { mockData } from "./data/mockData";
 
 // mock the async function
 jest.mock("./api/fetchShow");
+mockFetchShow.mockResolvedValue(mockData);
 
 it("displays a list of dropdown options when clicking on 'Select a season'", async () => {
-  mockFetchShow.mockResolvedValueOnce(mockData);
   const { findByText } = render(<App />);
-  const button = await findByText("Select a season");
-  userEvent.click(button);
+  userEvent.click(await findByText("Select a season"));
   await waitFor(() => {
-    expect(
-      document.querySelectorAll(".Dropdown-option").length
-    ).toBeGreaterThan(0);
+    expect(document.querySelectorAll(".Dropdown-option").length).toBe(4);
   });
 });
 
 it("displays a season's episodes after selecting a season", async () => {
-  mockFetchShow.mockResolvedValueOnce(mockData);
   const { findByText } = render(<App />);
-  const button = await findByText("Select a season");
-  userEvent.click(button);
+  userEvent.click(await findByText("Select a season"));
   await waitFor(() => {
     expect(
       document.querySelectorAll(".Dropdown-option").length
     ).toBeGreaterThan(0);
   });
 
-  const seasonButton = await findByText("Season 1");
-  userEvent.click(seasonButton);
+  userEvent.click(await findByText("Season 1"));
 
   await waitFor(() => {
-    expect(document.querySelectorAll(".episode").length).toBeGreaterThan(0);
+    expect(document.querySelectorAll(".episode").length).toBe(8);
   });
+});
+
+it("changes a season's episodes after selecting a new season", async () => {
+  const { findByText } = render(<App />);
+  userEvent.click(await findByText("Select a season"));
+  await waitFor(() => {
+    expect(document.querySelectorAll(".Dropdown-option").length).toBe(4);
+  });
+
+  userEvent.click(await findByText("Season 1"));
+
+  await waitFor(() => {
+    expect(document.querySelectorAll(".episode").length).toBe(8);
+  });
+
+  //   userEvent.click();
 });
