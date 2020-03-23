@@ -47,5 +47,10 @@ it("changes a season's episodes after selecting a new season", async () => {
     expect(document.querySelectorAll(".episode").length).toBe(8);
   });
 
-  //   userEvent.click();
+  userEvent.click(await findByText("Season 1"));
+  userEvent.click(await findByText("Season 4"));
+
+  await waitFor(() => {
+    expect(document.querySelectorAll(".episode").length).toBe(1);
+  });
 });
